@@ -1,0 +1,300 @@
+[
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "owner", "type": "address" },
+      { "indexed": true, "internalType": "address", "name": "approved", "type": "address" },
+      { "indexed": true, "internalType": "uint256", "name": "tokenId", "type": "uint256" }
+    ],
+    "name": "Approval",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "owner", "type": "address" },
+      { "indexed": true, "internalType": "address", "name": "operator", "type": "address" },
+      { "indexed": false, "internalType": "bool", "name": "approved", "type": "bool" }
+    ],
+    "name": "ApprovalForAll",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [{ "indexed": false, "internalType": "address", "name": "Judge", "type": "address" }],
+    "name": "NewJudgeAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": false, "internalType": "address", "name": "Requester", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "VoteCount", "type": "uint256" }
+    ],
+    "name": "NewVoteAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [{ "indexed": false, "internalType": "address", "name": "Requester", "type": "address" }],
+    "name": "RequestSubmitted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "from", "type": "address" },
+      { "indexed": true, "internalType": "address", "name": "to", "type": "address" },
+      { "indexed": true, "internalType": "uint256", "name": "tokenId", "type": "uint256" }
+    ],
+    "name": "Transfer",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "to", "type": "address" },
+      { "internalType": "uint256", "name": "tokenId", "type": "uint256" }
+    ],
+    "name": "approve",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "string", "name": "_Resume", "type": "string" }],
+    "name": "requestToBecomeJudge",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "from", "type": "address" },
+      { "internalType": "address", "name": "to", "type": "address" },
+      { "internalType": "uint256", "name": "tokenId", "type": "uint256" }
+    ],
+    "name": "safeTransferFrom",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "from", "type": "address" },
+      { "internalType": "address", "name": "to", "type": "address" },
+      { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
+      { "internalType": "bytes", "name": "_data", "type": "bytes" }
+    ],
+    "name": "safeTransferFrom",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "operator", "type": "address" },
+      { "internalType": "bool", "name": "approved", "type": "bool" }
+    ],
+    "name": "setApprovalForAll",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "from", "type": "address" },
+      { "internalType": "address", "name": "to", "type": "address" },
+      { "internalType": "uint256", "name": "tokenId", "type": "uint256" }
+    ],
+    "name": "transferFrom",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "_requester", "type": "address" }],
+    "name": "voteToAddJudge",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address[]", "name": "_judges", "type": "address[]" },
+      { "internalType": "string[]", "name": "_HubInfo", "type": "string[]" }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "owner", "type": "address" }],
+    "name": "balanceOf",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "name": "ExistOnPendingList",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "tokenId", "type": "uint256" }],
+    "name": "getApproved",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "bytes32", "name": "_messageHash", "type": "bytes32" }],
+    "name": "getEthSignedMessageHash",
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "_to", "type": "address" },
+      { "internalType": "uint256", "name": "_amount", "type": "uint256" },
+      { "internalType": "string", "name": "_message", "type": "string" },
+      { "internalType": "string", "name": "_nonce", "type": "string" }
+    ],
+    "name": "getMessageHash",
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "owner", "type": "address" },
+      { "internalType": "address", "name": "operator", "type": "address" }
+    ],
+    "name": "isApprovedForAll",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "name": "isJudge",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "JudgeListLength",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "name": "JudgesArray",
+    "outputs": [
+      { "internalType": "address", "name": "JudgeAddress", "type": "address" },
+      { "internalType": "string", "name": "JudgeResume", "type": "string" },
+      { "internalType": "uint256", "name": "tokenId", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "name",
+    "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "tokenId", "type": "uint256" }],
+    "name": "ownerOf",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "PendingAddressArrayLength",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "name": "PendingListAddresses",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "_ethSignedMessageHash", "type": "bytes32" },
+      { "internalType": "bytes", "name": "_signature", "type": "bytes" }
+    ],
+    "name": "recoverSigner",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "name": "RequesterMap",
+    "outputs": [
+      { "internalType": "address", "name": "RequesterAddress", "type": "address" },
+      { "internalType": "uint256", "name": "VoteCount", "type": "uint256" },
+      { "internalType": "string", "name": "Resume", "type": "string" },
+      { "internalType": "bool", "name": "Status", "type": "bool" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "bytes", "name": "sig", "type": "bytes" }],
+    "name": "splitSignature",
+    "outputs": [
+      { "internalType": "bytes32", "name": "r", "type": "bytes32" },
+      { "internalType": "bytes32", "name": "s", "type": "bytes32" },
+      { "internalType": "uint8", "name": "v", "type": "uint8" }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "bytes4", "name": "interfaceId", "type": "bytes4" }],
+    "name": "supportsInterface",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "symbol",
+    "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "tokenId", "type": "uint256" }],
+    "name": "tokenURI",
+    "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "_signer", "type": "address" },
+      { "internalType": "address", "name": "_to", "type": "address" },
+      { "internalType": "uint256", "name": "_amount", "type": "uint256" },
+      { "internalType": "string", "name": "_message", "type": "string" },
+      { "internalType": "string", "name": "_nonce", "type": "string" },
+      { "internalType": "bytes", "name": "signature", "type": "bytes" }
+    ],
+    "name": "verify",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "pure",
+    "type": "function"
+  }
+]
