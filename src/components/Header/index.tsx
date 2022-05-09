@@ -2,10 +2,7 @@ import Image from 'next/image'
 import { Box } from 'rebass/styled-components'
 import { Link } from '../../Elements/Link'
 import AppContainer from '../containers/AppContainer'
-<<<<<<< HEAD
 import ConnectButton from './ConnectButton'
-=======
->>>>>>> 1e307f4 (add header base)
 
 const Header = () => {
   return (
