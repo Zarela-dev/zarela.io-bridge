@@ -39,7 +39,6 @@ const Web3Modal = ({
   const [dialogHeader, setDialogHeader] = useState<ReactElement | undefined>(undefined)
 
   const changeView = (view: WalletItemViewTypes) => {
-    console.log('changeView', view)
     if (view === 'details') {
       setDialogHeader(
         <>
@@ -89,7 +88,7 @@ const Web3Modal = ({
   }, [connectorStatus])
 
   useEffect(() => {
-    if (connectorStatus === STATUS.DISCONNECTED) {
+    if (connectorStatus === STATUS.DISCONNECTED && eagerConnect) {
       setDialogOpen(true)
     } else if (connectorStatus === STATUS.CONNECTED && activeConnectorType === null) {
       setDialogOpen(true)
@@ -102,7 +101,7 @@ const Web3Modal = ({
     } else if (connectorStatus === STATUS.CONNECTED && activeConnectorType !== ConnectorType.Network) {
       setDialogOpen(false)
     } else {
-      setDialogOpen(true)
+      setDialogOpen(false)
     }
   }, [connectorStatus, activeConnectorType, forceMetamask])
 

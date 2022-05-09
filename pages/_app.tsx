@@ -2,6 +2,8 @@ import type { ReactElement, ReactNode } from 'react'
 import type { AppProps } from 'next/app'
 import type { NextPage } from 'next'
 import CommonLayout from '../src/Layouts/CommonLayout'
+import Web3Layout from '../src/Layouts/Web3Layout'
+import Web3Modal from '../src/components/Web3Modal'
 // import { useEffect } from 'react'
 // import TagManager from 'react-gtm-module'
 
@@ -20,7 +22,16 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   // }, [])
 
   const getLayout = Component.getLayout ?? ((page) => page)
-  return <CommonLayout>{getLayout(<Component {...pageProps} />)}</CommonLayout>
+  return (
+    <CommonLayout>
+      <Web3Layout>
+        <>
+          <Web3Modal />
+          {getLayout(<Component {...pageProps} />)}
+        </>
+      </Web3Layout>
+    </CommonLayout>
+  )
 }
 
 export default MyApp

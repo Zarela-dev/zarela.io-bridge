@@ -12,7 +12,7 @@ import {
   backgroundColor,
   borderColor,
   borderStyle,
-  borderWidth
+  borderWidth,
 } from 'styled-system'
 import { ThemeInterface } from '../Theme'
 
@@ -21,37 +21,50 @@ const CardComponent = styled(Box)(
   // #keep_watch https://github.com/styled-system/styled-system/issues/463
   // @ts-ignore
   {
-    borderStyle: 'solid',
+    // borderStyle: 'solid',
     // borderWidth: ['1px'],
-    borderColor: ({ theme }: { theme: ThemeInterface }) => theme.colors.other.border
+    // borderColor: ({ theme }: { theme: ThemeInterface }) => theme.colors.other.border,
   },
+  variant({
+    prop: 'contained',
+    variants: {
+      true: {
+        maxWidth: 320,
+        width: '100%',
+      },
+    },
+  }),
   variant({
     prop: 'variant',
     variants: {
       card: {
         primary: {
           borderRadius: [4],
-          backgroundColor: 'background.default'
+          backgroundColor: 'background.default',
         },
         secondary: {
           borderRadius: [4],
-          backgroundColor: 'background.surface'
+          backgroundColor: 'background.surface',
         },
         other: {
           borderRadius: [4],
-          backgroundColor: 'background.other'
-        }
-      }
-    }
+          backgroundColor: 'background.other',
+        },
+      },
+    },
   })
 )
 
 // eslint-disable-next-line react/display-name
 export const Card = React.forwardRef((props: any, _ref) => {
-  return <CardComponent
-    borderWidth={props.borderWidth || '1px'}
-    padding={props.padding || [5]}
-    ref={_ref} {...props}></CardComponent>
+  return (
+    <CardComponent
+      borderWidth={props.borderWidth || '1px'}
+      padding={props.padding || [5]}
+      ref={_ref}
+      {...props}
+    ></CardComponent>
+  )
 })
 
 //usage

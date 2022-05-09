@@ -1,6 +1,6 @@
 import { Contract } from '@ethersproject/contracts'
 import { ExternalProvider, JsonRpcFetchFunc, Web3Provider } from '@ethersproject/providers'
-import { ReactElement, useEffect, useLayoutEffect } from 'react'
+import { ReactElement, ReactNode, useEffect } from 'react'
 import { activateConnector } from '../lib/web3/activateConnector'
 import { ZARELA_CONTRACT_ADDRESS } from '../lib/contracts/addresses'
 import { CHAINS } from '../lib/web3/chains'
@@ -73,7 +73,7 @@ const setUpContracts = async (
   }
 }
 
-const Web3Layout = ({ children }: { children: ReactElement }) => {
+const Web3Layout = ({ children }: { children: ReactNode }) => {
   const {
     setStatus,
     connectorInProgress,
@@ -111,7 +111,7 @@ const Web3Layout = ({ children }: { children: ReactElement }) => {
     bootstrapConnector()
   }, [isActivating, isActive, error, connectorStatus])
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (connectorStatus === STATUS.CONNECTED && activeConnectorType === ConnectorType.MetaMask) {
       activateConnector(connectorInProgress || activeConnector, setActiveConnector, setConnectorInProgress)
     }

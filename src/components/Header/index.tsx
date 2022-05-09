@@ -35,9 +35,9 @@ const Header = () => {
             <Box
               sx={{
                 cursor: 'pointer',
-                position: ['fixed', 'unset', 'unset'],
-                left: ['50%', 'unset', 'unset'],
-                transform: ['translateX(-50%)', 'unset', 'unset'],
+                // position: ['fixed', 'unset', 'unset'],
+                // left: ['50%', 'unset', 'unset'],
+                // transform: ['translateX(-50%)', 'unset', 'unset'],
               }}
             >
               <Link href="/">
