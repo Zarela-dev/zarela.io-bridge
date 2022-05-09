@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components'
-import { Button as RebassButton, SxStyleProp } from 'rebass/styled-components'
+import { Button as RebassButton } from 'rebass/styled-components'
 import {
   variant,
   space,
@@ -48,7 +48,11 @@ const ButtonComponent = styled(RebassButton)(
     prop: 'variant',
     variants: {
       primary: {
-        backgroundColor: 'tertiary.800',
+        backgroundColor: 'tertiary.700',
+        borderBottomColor: 'tertiary.900',
+        borderBottomWidth: '2px',
+        borderBottomStyle: 'solid',
+
         '&:hover': {
           backgroundColor: 'tertiary.900',
         },

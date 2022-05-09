@@ -2,14 +2,12 @@ import { Contract } from '@ethersproject/contracts'
 import { ExternalProvider, JsonRpcFetchFunc, Web3Provider } from '@ethersproject/providers'
 import { ReactElement, useEffect, useLayoutEffect } from 'react'
 import { activateConnector } from '../lib/web3/activateConnector'
-import { VOTERS_CONTRACT, ZARELA_CONTRACT_ADDRESS } from '../lib/contracts/addresses'
+import { ZARELA_CONTRACT_ADDRESS } from '../lib/contracts/addresses'
 import { CHAINS } from '../lib/web3/chains'
-import { NetworkConnector } from '../lib/web3/connectors'
 import { getConnectorHooks } from '../lib/web3/getConnectorHooks'
 import { useStore } from '../store'
 import { ConnectorType, STATUS } from '../store/types.d'
 import ZarelaABI from '../lib/contracts/abi/ZarelaContract.json'
-import votersABI from '../lib/contracts/abi/votersContract.json'
 
 const setUpContracts = async (
   provider: ExternalProvider | JsonRpcFetchFunc,
@@ -20,8 +18,7 @@ const setUpContracts = async (
 
     // provider
     let web3Provider: Web3Provider | null = null,
-      zarelaContract: Contract | null = null,
-      votersContract: Contract | null = null
+      zarelaContract: Contract | null = null
 
     try {
       web3Provider = new Web3Provider(provider, 'any')
@@ -70,13 +67,6 @@ const setUpContracts = async (
       } catch (error: any) {
         console.log(error)
       }
-
-      votersContract = new Contract(VOTERS_CONTRACT[chainToConnect], votersABI, signerOrProvider)
-      try {
-        await setContracts.setVotersContract(votersContract)
-      } catch (error) {
-        console.log(error)
-      }
     }
   } else {
     console.error('provider is undefined, can not setup contract')
@@ -93,7 +83,6 @@ const Web3Layout = ({ children }: { children: ReactElement }) => {
     setActiveConnector,
     activeConnectorType,
     setZarelaContract,
-    setVotersContract,
   } = useStore()
   const { useError, useIsActivating, useIsActive } = getConnectorHooks(connectorInProgress || activeConnector)
 
@@ -133,7 +122,7 @@ const Web3Layout = ({ children }: { children: ReactElement }) => {
       if (connectorStatus === STATUS.CONNECTED && activeConnector) {
         if (activeConnector.provider !== undefined) {
           try {
-            await setUpContracts(activeConnector.provider, { setZarelaContract, setVotersContract })
+            await setUpContracts(activeConnector.provider, { setZarelaContract })
           } catch (error: any) {
             console.log('failed to setup contract', error)
           }

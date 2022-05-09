@@ -17,7 +17,6 @@ const STATUS_VERBOSE = {
 
 export interface ConnectorSliceType {
   zarelaContract: Contract | null
-  votersContract: Contract | null
 
   dialogOpen: boolean
   activeConnector: Connector | null
@@ -27,7 +26,6 @@ export interface ConnectorSliceType {
   verboseConnectorStatus: string | null
 
   setZarelaContract: (contract: Contract) => void
-  setVotersContract: (contract: Contract) => void
 
   setActiveConnectorType: (activeConnectorType: ConnectorType) => void
   setDialogOpen: (dialogOpen: boolean) => void
@@ -38,7 +36,6 @@ export interface ConnectorSliceType {
 
 const connectorSlice = (set: ({}) => void): ConnectorSliceType => ({
   zarelaContract: null,
-  votersContract: null,
 
   dialogOpen: false,
 
@@ -49,7 +46,6 @@ const connectorSlice = (set: ({}) => void): ConnectorSliceType => ({
   verboseConnectorStatus: null,
 
   setZarelaContract: (contract: Contract) => set({ zarelaContract: contract }),
-  setVotersContract: (contract: Contract) => set({ votersContract: contract }),
 
   setActiveConnectorType: (activeConnectorType: ConnectorType) => set({ activeConnectorType }),
   setDialogOpen: (dialogOpen: boolean) => set({ dialogOpen }),

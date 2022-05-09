@@ -4,6 +4,12 @@ export enum ConnectorType {
   Network = 'NETWORK',
 }
 
+export enum ConnectorTypeRev {
+  METAMASK = 'MetaMask',
+  WALLETCONNECT = 'WalletConnect',
+  NETWORK = 'Network',
+}
+
 export enum STATUS {
   DISCONNECTED = 'DISCONNECTED',
   NO_INJECTED_PROVIDER = 'NO_INJECTED_PROVIDER',
