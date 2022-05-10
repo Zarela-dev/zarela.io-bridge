@@ -14,19 +14,23 @@ const EncryptionPublicKey = () => {
 
   const getEncryptionKey = async () => {
     if (provider?.provider.request && account) {
-      let res
-      try {
-        res = await provider?.provider.request({
-          method: 'eth_getEncryptionPublicKey',
-          params: [account], // you must have access to the specified account
-        })
-        if (window.navigator) {
-          navigator.clipboard.writeText(res)
-          setStep('success')
+      if (provider.network.chainId !== 1) {
+        setStep('networkError')
+      } else {
+        let res
+        try {
+          res = await provider?.provider.request({
+            method: 'eth_getEncryptionPublicKey',
+            params: [account], // you must have access to the specified account
+          })
+          if (window.navigator) {
+            navigator.clipboard.writeText(res)
+            setStep('success')
+          }
+        } catch (error) {
+          setStep('retry')
+          console.error(error)
         }
-      } catch (error) {
-        setStep('retry')
-        console.error(error)
       }
     } else {
       setDialogOpen(true)
@@ -49,8 +53,8 @@ const EncryptionPublicKey = () => {
     } else if (step === 'networkError') {
       return (
         <BasicCard
-          title="Creating your request"
-          subtitle="We need your encryption key before we can create a new request."
+          title="Wrong network"
+          subtitle='You are connected to the wrong network. Please switch to the "Ethereum Mainnet or Testnet" to continue.'
           actions={
             <Button
               variant="primary"
@@ -61,18 +65,19 @@ const EncryptionPublicKey = () => {
                 if (provider?.provider.request) {
                   let res
                   try {
-                    res = await provider?.provider.request({
-                      method: 'eth_getEncryptionPublicKey',
-                      params: [account], // you must have access to the specified account
+                    res = await provider.provider.request({
+                      method: 'wallet_switchEthereumChain',
+                      params: [{ chainId: '0x1' }],
                     })
                     console.log('here res', res)
+										setStep('request')
                   } catch (error) {
                     console.log('here', error)
                   }
                 }
               }}
             >
-              Connect Wallet
+              Switch to Mainnet
             </Button>
           }
         />
