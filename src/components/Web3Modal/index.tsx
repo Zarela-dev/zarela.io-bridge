@@ -133,8 +133,6 @@ const Web3Modal = ({
                 )
               })
             : Object.keys(SUPPORTED_WALLETS).map((key) => {
-                console.log('view', key, connectedWallet)
-
                 if (key === connectedWallet)
                   return (
                     <WalletItem

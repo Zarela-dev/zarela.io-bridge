@@ -8,6 +8,12 @@ export const addressClipper = (address: string): string => {
   return addressClipped
 }
 
+export const hashClipper = (hash: string): string => {
+  if (!hash) return ''
+  const hashClipped = hash.slice(0, 6) + '...' + hash.slice(-8)
+  return hashClipped
+}
+
 export const convertToBiobit = (value, format = true) => {
   if (typeof value === undefined) return 'Invalid value'
 

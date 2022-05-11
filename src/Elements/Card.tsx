@@ -31,6 +31,7 @@ const CardComponent = styled(Box)(
       true: {
         maxWidth: 320,
         width: '100%',
+				margin: '0 auto',
       },
     },
   }),

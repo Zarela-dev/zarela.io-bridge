@@ -61,7 +61,6 @@ const EncryptionPublicKey = () => {
               size="medium"
               sx={{ width: '100%' }}
               onClick={async () => {
-                console.log('provider', provider)
                 if (provider?.provider.request) {
                   let res
                   try {
@@ -69,10 +68,9 @@ const EncryptionPublicKey = () => {
                       method: 'wallet_switchEthereumChain',
                       params: [{ chainId: '0x1' }],
                     })
-                    console.log('here res', res)
-										setStep('request')
+                    setStep('request')
                   } catch (error) {
-                    console.log('here', error)
+                    console.error(error)
                   }
                 }
               }}
