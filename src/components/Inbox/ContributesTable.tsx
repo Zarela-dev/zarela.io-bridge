@@ -9,6 +9,8 @@ import { useStore } from '../../store'
 import { addressClipper, hashClipper } from '../../utils'
 import { pendingFilesContext } from '../../store/pendingFilesProvider'
 import InlineSpinner from '../Spinner/inline'
+import Image from 'next/image'
+import clockImage from '../../../public/images/icons/clock-2.svg'
 
 const RowDivider = () => {
   return (
@@ -206,7 +208,7 @@ const ContributesTable = ({ request, download }) => {
                             </Box>
                           </Checkbox>
                         ) : getFileStatus(item.originalIndex, item.status) === 'pending' ? (
-                          <InlineSpinner />
+                          <Image src={clockImage} alt="paid" width={24} height={24} />
                         ) : (
                           <Checkbox
                             name={item.ipfsHash}
