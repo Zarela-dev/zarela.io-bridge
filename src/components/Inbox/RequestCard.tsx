@@ -4,6 +4,11 @@ import { Icon } from '../../Elements/Icon'
 import { Text } from '../../Elements/Typography'
 import biobitSymbol from '../../../public/images/icons/BBIT.svg'
 import ContributesTable from './ContributesTable'
+import { Button } from '../../Elements/Button'
+import { useStore } from '../../store'
+import { useCallback, useContext, useEffect, useState } from 'react'
+import { getConnectorHooks } from '../../lib/web3/getConnectorHooks'
+import { pendingFilesContext } from '../../store/pendingFilesProvider'
 
 const InfoBox = ({ title, icon, value, ...props }) => {
   return (
@@ -22,6 +27,59 @@ const InfoBox = ({ title, icon, value, ...props }) => {
 }
 
 const RequestCard = ({ request, download }) => {
+  const [isSendingTokens, setIsSendingTokens] = useState(false)
+  const { activeConnector, zarelaContract } = useStore()
+  const { useAccount } = getConnectorHooks(activeConnector)
+  const account = useAccount()
+  const [cleanSelected, setCleanSelected] = useState(null)
+  const [shouldRefresh, setShouldRefresh] = useState(false)
+  const PendingFiles = useContext(pendingFilesContext)
+  const [selected, setSelected] = useState([])
+
+  const { setPendingFile, removePendingFile } = PendingFiles
+
+  const handleConfirm = useCallback(
+    (requestID, originalIndexes) => {
+      setIsSendingTokens(true)
+      if (zarelaContract) {
+        console.log('requestID', requestID, 'originalIndexes', originalIndexes, account)
+        zarelaContract
+          .confirmContributor(requestID, originalIndexes, {
+            from: account,
+            // gasLimit: new BigNumber(500000).plus(originalIndexes.length * 15000).toNumber(),
+          })
+          .then(({ hash: txHash }) => {
+            setPendingFile({
+              txHash,
+              requestID,
+              originalIndexes,
+            })
+            setCleanSelected(requestID)
+            // toast(`TX Hash: ${txHash}`, 'success', true, txHash, {
+            //   toastId: txHash,
+            // })
+            console.log(`TX Hash: ${txHash}`)
+          })
+          .catch((error) => {
+            console.log(error)
+            // toast(error.message, 'error')
+          })
+          .finally(() => {
+            setIsSendingTokens(false)
+          })
+      }
+    },
+    [zarelaContract]
+  )
+
+  useEffect(() => {
+    if (zarelaContract && removePendingFile !== undefined)
+      zarelaContract.on('signalsApproved', ({ transactionHash }) => {
+        removePendingFile(transactionHash)
+        setShouldRefresh(true)
+      })
+  }, [zarelaContract, removePendingFile])
+
   return (
     <Card variant="card.other" sx={{ width: '100%', marginBottom: 4 }}>
       <Flex width={'100%'} flexDirection="row" flexWrap={'wrap'}>
@@ -57,7 +115,24 @@ const RequestCard = ({ request, download }) => {
           <InfoBox title={'Total Reward'} icon={biobitSymbol} value={20} mr={7} />
           <InfoBox title={'Total Reward'} icon={biobitSymbol} value={20} />
         </Flex>
-        <ContributesTable download={download} request={request} />
+        <ContributesTable download={download} request={request} selected={selected} setSelected={setSelected} />
+        <Box
+          sx={{
+            display: 'flex',
+            width: '100%',
+            justifyContent: 'flex-end',
+            marginTop: 4,
+          }}
+        >
+          <Button
+            disabled={selected.length === 0 || isSendingTokens}
+            variant="primary"
+            size="large"
+            onClick={() => handleConfirm(request.requestID, selected)}
+          >
+            Send Tokens
+          </Button>
+        </Box>
       </Flex>
     </Card>
   )

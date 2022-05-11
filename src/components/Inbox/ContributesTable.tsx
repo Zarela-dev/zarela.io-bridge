@@ -25,7 +25,7 @@ const RowDivider = () => {
     ></Box>
   )
 }
-const ContributesTable = ({ request, download }) => {
+const ContributesTable = ({ request, download, selected, setSelected }) => {
   const { requestID } = request
   const [unapprovedCount, setUnapprovedCount] = useState(0)
   const [formattedData, setFormattedData] = useState({})
@@ -33,7 +33,6 @@ const ContributesTable = ({ request, download }) => {
   const { activeConnector, zarelaContract: contract } = useStore()
   const { useAccount } = getConnectorHooks(activeConnector)
   const account = useAccount()
-  const [selected, setSelected] = useState([])
   const PendingFiles = useContext(pendingFilesContext)
   const { pendingFiles } = PendingFiles
 
@@ -173,7 +172,7 @@ const ContributesTable = ({ request, download }) => {
                   {formattedData[key].map((item, index) => {
                     return (
                       <Box
-                        key={item.ipfsHash + index}
+                        key={item.originalIndex + item.ipfsHash}
                         sx={{
                           display: 'flex',
                           flexDirection: 'row',
@@ -187,7 +186,7 @@ const ContributesTable = ({ request, download }) => {
                       >
                         {getFileStatus(item.originalIndex, item.status) === 'approved' ? (
                           <Checkbox
-                            name={item.ipfsHash}
+                            name={item.originalIndex + item.ipfsHash}
                             disabled
                             checked
                             onChange={(e) => {
@@ -211,7 +210,7 @@ const ContributesTable = ({ request, download }) => {
                           <Image src={clockImage} alt="paid" width={24} height={24} />
                         ) : (
                           <Checkbox
-                            name={item.ipfsHash}
+                            name={item.originalIndex + item.ipfsHash}
                             checked={selected.includes(item.originalIndex)}
                             onChange={(e) => {
                               if (e.target.checked === true) {
