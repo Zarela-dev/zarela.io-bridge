@@ -6,7 +6,7 @@ import { CheckboxInput } from '../../Elements/CheckboxInput'
 import { Text } from '../../Elements/Typography'
 import { getConnectorHooks } from '../../lib/web3/getConnectorHooks'
 import { useStore } from '../../store'
-import { addressClipper, hashClipper } from '../../utils'
+import { addressClipper, hashClipper, timeSince } from '../../utils'
 import { pendingFilesContext } from '../../store/pendingFilesProvider'
 import InlineSpinner from '../Spinner/inline'
 import Image from 'next/image'
@@ -202,8 +202,8 @@ const ContributesTable = ({ request, download }) => {
                               <Text fontSize="labelMedium" color="content.900" title={item.ipfsHash}>
                                 {`File ${item.originalIndex} (${hashClipper(item.ipfsHash)})`}
                               </Text>
-                              <Text fontSize="labelSmall" color="content.700">
-                                {item.timestamp}
+                              <Text fontSize="labelSmall" color="content.700" sx={{ marginTop: 1 }}>
+                                {timeSince(item.timestamp)}
                               </Text>
                             </Box>
                           </Checkbox>
@@ -225,8 +225,8 @@ const ContributesTable = ({ request, download }) => {
                               <Text fontSize="labelMedium" color="content.900" title={item.ipfsHash}>
                                 {`File ${item.originalIndex} (${hashClipper(item.ipfsHash)})`}
                               </Text>
-                              <Text fontSize="labelSmall" color="content.700">
-                                {item.timestamp}
+                              <Text fontSize="labelSmall" color="content.700" sx={{ marginTop: 1 }}>
+                                {timeSince(item.timestamp)}
                               </Text>
                             </Box>
                           </Checkbox>

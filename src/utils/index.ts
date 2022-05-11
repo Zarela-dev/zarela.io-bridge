@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js'
+import { timeSince } from './timeSince'
 
 export const normalizeAddress = (address: string): string => address && address.toLowerCase()
 
@@ -20,3 +21,5 @@ export const convertToBiobit = (value, format = true) => {
   if (format) return new BigNumber(value).dividedBy(1000000000).toFormat()
   return new BigNumber(value).dividedBy(1000000000).toNumber()
 }
+
+export { timeSince }
