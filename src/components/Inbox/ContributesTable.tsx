@@ -23,7 +23,7 @@ const RowDivider = () => {
     ></Box>
   )
 }
-const ContributesTable = ({ request }) => {
+const ContributesTable = ({ request, download }) => {
   const { requestID } = request
   const [unapprovedCount, setUnapprovedCount] = useState(0)
   const [formattedData, setFormattedData] = useState({})
@@ -160,7 +160,7 @@ const ContributesTable = ({ request }) => {
         <RowDivider />
         {Object.keys(formattedData).map((key, formattedIndex) => {
           return (
-            <Box key={key} as="section">
+            <Box key={key + formattedIndex} as="section">
               <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'row', flexWrap: 'nowrap', padding: 4 }}>
                 <Box flex="0 0 30%">
                   <Text fontSize="labelMedium" color="content.900" title={key}>
@@ -171,7 +171,7 @@ const ContributesTable = ({ request }) => {
                   {formattedData[key].map((item, index) => {
                     return (
                       <Box
-                        key={item.ipfsHash}
+                        key={item.ipfsHash + index}
                         sx={{
                           display: 'flex',
                           flexDirection: 'row',
@@ -230,7 +230,13 @@ const ContributesTable = ({ request }) => {
                           </Checkbox>
                         )}
                         <Box>
-                          <Button variant="outline" size="medium">
+                          <Button
+                            variant="outline"
+                            size="medium"
+                            onClick={() => {
+                              download(item.ipfsHash, item.AesEncryptedKey)
+                            }}
+                          >
                             Download
                           </Button>
                         </Box>

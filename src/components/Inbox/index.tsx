@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { ReactElement, useEffect, useRef, useState } from 'react'
 import { Box } from 'rebass'
 import { Button } from '../../Elements/Button'
 import { Text } from '../../Elements/Typography'
@@ -8,13 +8,39 @@ import { convertToBiobit } from '../../utils'
 import BodyWrapper from '../BodyWrapper'
 import BasicCard from '../EncryptionPublicKey/Card'
 import RequestCard from './RequestCard'
+import axios from 'axios'
+// import worker from 'workerize-loader!./decrypt.worker.js'
+import { saveAs } from 'file-saver'
+import Dialog from '../Dialog'
+import Image from 'next/image'
+import loaderImage from '../../../public/images/loading.gif'
 
 const Inbox = () => {
   const [requests, setRequests] = useState({})
   const [isLoading, setLoading] = useState<boolean>(true)
   const { activeConnector, zarelaContract: contract } = useStore()
-  const { useAccount } = getConnectorHooks(activeConnector)
+  const { useAccount, useProvider } = getConnectorHooks(activeConnector)
   const account = useAccount()
+  const provider = useProvider()
+  const [isSubmitting, setSubmitting] = useState<boolean>(false)
+  const [dialogMessage, setDialogMessage] = useState<string>('')
+  const worker: any = useRef()
+  const [closable, setClosable] = useState<boolean>(false)
+  const [loader, setLoader] = useState<boolean>(true)
+
+  const clearSubmitDialog = () => {
+    setLoader(true)
+    setClosable(false)
+    setSubmitting(false)
+    setDialogMessage('')
+  }
+
+  useEffect(() => {
+    worker.current = new Worker(new URL('../../workers/decrypt.worker.ts', import.meta.url))
+    return () => {
+      worker.current.terminate()
+    }
+  }, [])
 
   useEffect(() => {
     if (contract !== null) {
@@ -69,18 +95,112 @@ const Inbox = () => {
     }
   }, [contract, account])
 
+  const signalDownloadHandler = async (fileHash, fileMetaCID) => {
+    if (provider?.provider.request) {
+      setSubmitting(true)
+      const workerInstance = worker.current
+
+      try {
+        /* fetch signal file metadata from IPFS */
+        setDialogMessage('Downloading encrypted keys from IPFS')
+
+        const encryptedFileMetaRes = await axios.get(`${process.env.NEXT_PUBLIC_IPFS_GET_LINK + fileMetaCID}`)
+        setDialogMessage('Please approve decryption from your wallet')
+
+        const decryptedFileMeta = await provider.provider.request({
+          method: 'eth_decrypt',
+          params: [encryptedFileMetaRes.data, account],
+        })
+
+        const { KEY, NONCE, FILE_NAME, FILE_EXT } = JSON.parse(decryptedFileMeta)
+
+        setDialogMessage('Decrypting keys ...')
+        /* decrypt secret key using metamask*/
+
+        workerInstance.postMessage({
+          fileHash,
+          KEY,
+          NONCE,
+        })
+
+        workerInstance.onmessage = async (event) => {
+          if (event.data.type === 'terminate') {
+            // workerInstance.terminate()
+          }
+          if (event.data.type === 'feedback') {
+            setDialogMessage(event.data.message)
+          }
+          if (event.data.type === 'decrypted') {
+            console.log(event.data.decrypted_file, `${FILE_NAME}.${FILE_EXT}`)
+            await saveAs(new Blob([event.data.decrypted_file]), `${FILE_NAME}.${FILE_EXT}`)
+            clearSubmitDialog()
+          }
+        }
+      } catch (error) {
+        if (error.code === 4001) {
+          clearSubmitDialog()
+        } else {
+          setClosable(true)
+          setLoader(false)
+          setDialogMessage('there was an error decrypting your file, please contact support for more information.')
+        }
+        console.error(error)
+      }
+    } else {
+      console.error('no provider found')
+    }
+  }
+
   return (
     <BodyWrapper>
       <Box width="100%">
+        <Dialog
+          closable={closable}
+          isOpen={isSubmitting}
+          onClose={() => {
+            clearSubmitDialog()
+          }}
+          body={
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: '140px',
+                minWidth: '520px',
+              }}
+            >
+              {loader ? (
+                <Box mb={4}>
+                  <Image src={loaderImage} alt="loading" width={52} height={52} />
+                </Box>
+              ) : null}
+              <Text variant="typography.titleMedium">{dialogMessage}</Text>
+            </Box>
+          }
+        />
         {isLoading ? (
-          <BasicCard title="Loading" />
+          <BasicCard title={'Loading your requests'}>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: '100px',
+                width: '100%',
+              }}
+            >
+              <Image src={loaderImage} alt="loading" width={52} height={52} />
+            </Box>
+          </BasicCard>
         ) : Object.keys(requests).length > 0 ? (
           Object.keys(requests).map((key) => {
-            return <RequestCard request={requests[key]} key={key} />
+            return <RequestCard download={signalDownloadHandler} request={requests[key]} key={key} />
           })
         ) : (
           <BasicCard
-            key={key}
             title="No results found"
             subtitle="You don't seem to have any requests."
             actions={

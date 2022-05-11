@@ -5,7 +5,17 @@ import { Button } from '../../Elements/Button'
 import { Card } from '../../Elements/Card'
 import { Text } from '../../Elements/Typography'
 
-const BasicCard = ({ title, subtitle, actions }: { title: string; subtitle?: string; actions?: ReactElement }) => {
+const BasicCard = ({
+  title,
+  subtitle,
+  actions,
+  children,
+}: {
+  title?: string
+  children?: ReactElement
+  subtitle?: string
+  actions?: ReactElement
+}) => {
   return (
     <Card variant="card.secondary" contained>
       <Box
@@ -27,6 +37,7 @@ const BasicCard = ({ title, subtitle, actions }: { title: string; subtitle?: str
           </Text>
         )}
         {actions && <Box width={'100%'}>{actions}</Box>}
+        {children}
       </Box>
     </Card>
   )

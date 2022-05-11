@@ -21,7 +21,7 @@ const InfoBox = ({ title, icon, value, ...props }) => {
   )
 }
 
-const RequestCard = ({ request }) => {
+const RequestCard = ({ request, download }) => {
   return (
     <Card variant="card.other" sx={{ width: '100%', marginBottom: 4 }}>
       <Flex width={'100%'} flexDirection="row" flexWrap={'wrap'}>
@@ -57,7 +57,7 @@ const RequestCard = ({ request }) => {
           <InfoBox title={'Total Reward'} icon={biobitSymbol} value={20} mr={7} />
           <InfoBox title={'Total Reward'} icon={biobitSymbol} value={20} />
         </Flex>
-        <ContributesTable request={request} />
+        <ContributesTable download={download} request={request} />
       </Flex>
     </Card>
   )

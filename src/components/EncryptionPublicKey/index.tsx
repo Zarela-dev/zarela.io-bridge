@@ -14,7 +14,7 @@ const EncryptionPublicKey = () => {
 
   const getEncryptionKey = async () => {
     if (provider?.provider.request && account) {
-      if (provider.network.chainId !== 1) {
+      if (provider.network.chainId !== 3) {
         setStep('networkError')
       } else {
         let res
