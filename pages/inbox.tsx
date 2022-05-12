@@ -8,7 +8,7 @@ import { client } from '../src/aplloClient'
 const InboxPage = () => {
   return (
     <Box>
-      <Web3Modal />
+      <Web3Modal eagerConnect />
       <Inbox />
     </Box>
   )

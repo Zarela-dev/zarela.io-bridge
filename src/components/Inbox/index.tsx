@@ -18,10 +18,11 @@ import loaderImage from '../../../public/images/loading.gif'
 const Inbox = () => {
   const [requests, setRequests] = useState({})
   const [isLoading, setLoading] = useState<boolean>(true)
-  const { activeConnector, zarelaContract: contract, initPendingFiles } = useStore()
-  const { useAccount, useProvider } = getConnectorHooks(activeConnector)
+  const { activeConnector, zarelaContract: contract, initPendingFiles, setDialogOpen } = useStore()
+  const { useAccount, useProvider, useIsActive } = getConnectorHooks(activeConnector)
   const account = useAccount()
   const provider = useProvider()
+  const isActive = useIsActive()
   const [isSubmitting, setSubmitting] = useState<boolean>(false)
   const [dialogMessage, setDialogMessage] = useState<string>('')
   const worker: any = useRef()
@@ -186,7 +187,17 @@ const Inbox = () => {
             </Box>
           }
         />
-        {isLoading ? (
+        {!isActive ? (
+          <BasicCard
+            title="Trying to load your requests"
+            subtitle="You need to connect your wallet to see your requests"
+            actions={
+              <Button variant="primary" size="medium" sx={{ width: '100%' }} onClick={() => setDialogOpen(true)}>
+                Connect
+              </Button>
+            }
+          />
+        ) : isLoading ? (
           <BasicCard title={'Loading your requests'}>
             <Box
               sx={{
