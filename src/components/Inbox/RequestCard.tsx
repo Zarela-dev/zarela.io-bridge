@@ -87,19 +87,26 @@ const RequestCard = ({ request, download, collapsedRequest, setCollapsedRequest 
   )
 
   useEffect(() => {
-    if (zarelaContract)
-      zarelaContract.once('signalsApproved', (orderId, confirmCount, { transactionHash }) => {
-        console.log('removing file,', transactionHash)
-        toast.success(`Transaction Confirmed: ${transactionHash}`, {
-          position: 'bottom-center',
-          theme: 'dark',
-          toastId: transactionHash,
-          autoClose: 2000,
-          transition: Zoom,
+    if (zarelaContract) {
+      if (zarelaContract.listeners('signalsApproved').length === 0)
+        zarelaContract.on('signalsApproved', (orderId, confirmCount, { transactionHash }) => {
+          console.log('removing file,', transactionHash)
+          toast.success(`Transaction Confirmed: ${transactionHash}`, {
+            position: 'bottom-center',
+            theme: 'dark',
+            toastId: transactionHash,
+            autoClose: 2000,
+            transition: Zoom,
+          })
+          removePendingFiles(transactionHash)
+          setShouldRefresh(true)
         })
-        removePendingFiles(transactionHash)
-        setShouldRefresh(true)
-      })
+    }
+    return () => {
+      if (zarelaContract) {
+        zarelaContract.removeAllListeners('signalsApproved')
+      }
+    }
   }, [zarelaContract])
 
   return (
