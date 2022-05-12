@@ -44,7 +44,6 @@ const RequestCard = ({ request, download, collapsedRequest, setCollapsedRequest 
     (requestID, originalIndexes) => {
       setIsSendingTokens(true)
       if (zarelaContract) {
-        console.log('requestID', requestID, 'originalIndexes', originalIndexes, account)
         zarelaContract
           .confirmContributor(requestID, originalIndexes, {
             from: account,
@@ -67,10 +66,8 @@ const RequestCard = ({ request, download, collapsedRequest, setCollapsedRequest 
                 copyToClipboard(txHash)
               },
             })
-            console.log(`TX Hash: ${hashClipper(txHash)}`)
           })
           .catch((error) => {
-            console.log(error)
             toast.error(`Transaction Failed: ${error.message}`, {
               position: 'bottom-center',
               theme: 'dark',
@@ -90,7 +87,6 @@ const RequestCard = ({ request, download, collapsedRequest, setCollapsedRequest 
     if (zarelaContract) {
       if (zarelaContract.listeners('signalsApproved').length === 0)
         zarelaContract.on('signalsApproved', (orderId, confirmCount, { transactionHash }) => {
-          console.log('removing file,', transactionHash)
           toast.success(`Transaction Confirmed: ${transactionHash}`, {
             position: 'bottom-center',
             theme: 'dark',

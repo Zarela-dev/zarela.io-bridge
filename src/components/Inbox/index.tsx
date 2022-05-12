@@ -138,7 +138,6 @@ const Inbox = () => {
             setDialogMessage(event.data.message)
           }
           if (event.data.type === 'decrypted') {
-            console.log(event.data.decrypted_file, `${FILE_NAME}.${FILE_EXT}`)
             await saveAs(new Blob([event.data.decrypted_file]), `${FILE_NAME}.${FILE_EXT}`)
             clearSubmitDialog()
           }

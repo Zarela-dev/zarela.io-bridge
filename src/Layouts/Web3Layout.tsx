@@ -65,7 +65,7 @@ const setUpContracts = async (
       try {
         await setContracts.setZarelaContract(zarelaContract)
       } catch (error: any) {
-        console.log(error)
+        console.error(error)
       }
     }
   } else {

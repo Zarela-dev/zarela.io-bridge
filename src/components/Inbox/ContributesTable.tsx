@@ -43,8 +43,6 @@ const ContributesTable = ({ request, download, selected, setSelected, shouldRefr
             status = 'pending'
             break
           }
-        } else {
-          console.log('originalIndex', item)
         }
       }
       return status
@@ -125,7 +123,6 @@ const ContributesTable = ({ request, download, selected, setSelected, shouldRefr
             })
             .finally(() => {
               setIsLoading(false)
-              console.log('done loading')
             })
         })
         .catch((error) => {})
