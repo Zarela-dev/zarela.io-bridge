@@ -3,6 +3,7 @@ import { Card } from '../../Elements/Card'
 import { Icon } from '../../Elements/Icon'
 import { Text } from '../../Elements/Typography'
 import biobitSymbol from '../../../public/images/icons/BBIT.svg'
+import userIcon from '../../../public/images/icons/user.svg'
 import ContributesTable from './ContributesTable'
 import { Button } from '../../Elements/Button'
 import { useStore } from '../../store'
@@ -10,6 +11,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { getConnectorHooks } from '../../lib/web3/getConnectorHooks'
 import { copyToClipboard, hashClipper } from '../../utils'
 import { toast, Zoom } from 'react-toastify'
+import useBiobit from '../../hooks/useBiobit'
 
 const InfoBox = ({ title, icon, value, ...props }) => {
   return (
@@ -34,6 +36,7 @@ const RequestCard = ({ request, download }) => {
   const account = useAccount()
   const [shouldRefresh, setShouldRefresh] = useState(false)
   const [selected, setSelected] = useState([])
+  const getBBIT = useBiobit()
 
   const handleConfirm = useCallback(
     (requestID, originalIndexes) => {
@@ -129,8 +132,19 @@ const RequestCard = ({ request, download }) => {
           }}
         ></Box>
         <Flex width={'100%'}>
-          <InfoBox title={'Total Reward'} icon={biobitSymbol} value={20} mr={7} />
-          <InfoBox title={'Total Reward'} icon={biobitSymbol} value={20} />
+          <InfoBox
+            title={'Total Reward'}
+            icon={biobitSymbol}
+            value={`${getBBIT(request.angelTokenPay, request.laboratoryTokenPay)[0]} | ~ $${
+              getBBIT(request.angelTokenPay, request.laboratoryTokenPay)[1]
+            }`}
+            mr={7}
+          />
+          <InfoBox
+            title={'Contributions'}
+            icon={userIcon}
+            value={`${request.totalContributed}/${request.totalContributors}`}
+          />
         </Flex>
         <ContributesTable
           download={download}
