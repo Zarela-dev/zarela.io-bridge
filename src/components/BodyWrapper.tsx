@@ -7,7 +7,7 @@ const BodyWrapper = ({ children }: { children: ReactElement | false | undefined 
       sx={{
         display: 'flex',
         width: '100%',
-        minHeight: '100vh',
+        minHeight: 'calc(100vh - 72px)',
         justifyContent: 'center',
         alignItems: 'center',
       }}
