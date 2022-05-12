@@ -4,6 +4,9 @@ import type { NextPage } from 'next'
 import CommonLayout from '../src/Layouts/CommonLayout'
 import Web3Layout from '../src/Layouts/Web3Layout'
 import Web3Modal from '../src/components/Web3Modal'
+import 'react-toastify/dist/ReactToastify.css'
+import { ToastContainer } from 'react-toastify'
+
 // import { useEffect } from 'react'
 // import TagManager from 'react-gtm-module'
 
@@ -26,6 +29,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
     <CommonLayout>
       <Web3Layout>
         <>
+          <ToastContainer limit={1} />
           <Web3Modal />
           {getLayout(<Component {...pageProps} />)}
         </>

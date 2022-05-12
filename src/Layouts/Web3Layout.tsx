@@ -73,7 +73,7 @@ const setUpContracts = async (
   }
 }
 
-const Web3Layout = ({ children }: { children: ReactNode }) => {
+const Web3Layout = ({ children }: { children: ReactElement }) => {
   const {
     setStatus,
     connectorInProgress,

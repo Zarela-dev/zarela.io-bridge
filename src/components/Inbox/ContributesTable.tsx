@@ -1,16 +1,11 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Box } from 'rebass/styled-components'
 import { Button } from '../../Elements/Button'
 import Checkbox from '../../Elements/Checkbox'
-import { CheckboxInput } from '../../Elements/CheckboxInput'
 import { Text } from '../../Elements/Typography'
 import { getConnectorHooks } from '../../lib/web3/getConnectorHooks'
 import { useStore } from '../../store'
 import { addressClipper, hashClipper, timeSince } from '../../utils'
-import { pendingFilesContext } from '../../store/pendingFilesProvider'
-import InlineSpinner from '../Spinner/inline'
-import Image from 'next/image'
-import clockImage from '../../../public/images/icons/clock-2.svg'
 
 const RowDivider = () => {
   return (
@@ -25,32 +20,33 @@ const RowDivider = () => {
     ></Box>
   )
 }
-const ContributesTable = ({ request, download, selected, setSelected }) => {
+const ContributesTable = ({ request, download, selected, setSelected, shouldRefresh }) => {
   const { requestID } = request
   const [unapprovedCount, setUnapprovedCount] = useState(0)
   const [formattedData, setFormattedData] = useState({})
   const [isSubmitting, setSubmitting] = useState(false)
-  const { activeConnector, zarelaContract: contract } = useStore()
+  const { activeConnector, zarelaContract: contract, pendingFiles } = useStore()
   const { useAccount } = getConnectorHooks(activeConnector)
   const account = useAccount()
-  const PendingFiles = useContext(pendingFilesContext)
-  const { pendingFiles } = PendingFiles
 
   const getFileStatus = useCallback(
     (originalIndex, originalStatus) => {
       if (originalStatus === true) return 'approved'
       let status = 'available'
-
-      for (let i = 0; i < Object.values(pendingFiles.pending).length; i++) {
-        const item = Object.values(pendingFiles.pending)[i]
-        if (item.requestID === requestID && item.originalIndexes.includes(originalIndex)) {
-          status = 'pending'
-          break
+      for (let i = 0; i < Object.values(pendingFiles).length; i++) {
+        const item = Object.values(pendingFiles)[i]
+        if (item !== undefined) {
+          if (item.requestID === requestID && item.contributionIndexes.includes(originalIndex)) {
+            status = 'pending'
+            break
+          }
+        } else {
+          console.log('originalIndex', item)
         }
       }
       return status
     },
-    [pendingFiles?.pending]
+    [pendingFiles]
   )
 
   const onChange = (type, originalIndex) => {
@@ -128,7 +124,7 @@ const ContributesTable = ({ request, download, selected, setSelected }) => {
         .catch((error) => {})
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [contract])
+  }, [contract, shouldRefresh])
 
   if (Object.keys(formattedData).length > 0)
     return (
@@ -207,7 +203,16 @@ const ContributesTable = ({ request, download, selected, setSelected }) => {
                             </Box>
                           </Checkbox>
                         ) : getFileStatus(item.originalIndex, item.status) === 'pending' ? (
-                          <Image src={clockImage} alt="paid" width={24} height={24} />
+                          <Checkbox name={item.originalIndex + item.ipfsHash} pending>
+                            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                              <Text fontSize="labelMedium" color="content.900" title={item.ipfsHash}>
+                                {`File ${item.originalIndex} (${hashClipper(item.ipfsHash)})`}
+                              </Text>
+                              <Text fontSize="labelSmall" color="content.700" sx={{ marginTop: 1 }}>
+                                {timeSince(item.timestamp)}
+                              </Text>
+                            </Box>
+                          </Checkbox>
                         ) : (
                           <Checkbox
                             name={item.originalIndex + item.ipfsHash}

@@ -1,9 +1,8 @@
 import Image from 'next/image'
 import { Box } from 'rebass/styled-components'
 import styled from 'styled-components'
-import { height } from 'styled-system'
 import checkIcon from '../../public/images/icons/checkmark.svg'
-import { Icon } from './Icon'
+import clockIcon from '../../public/images/icons/clock-2.svg'
 
 const Input = styled.input`
   display: none;
@@ -11,7 +10,7 @@ const Input = styled.input`
 
 //https://codepen.io/AllThingsSmitty/pen/WjZVjo?editors=1100
 const Checkbox = (props) => {
-  const { name, onChange, checked, children, disabled, sx, ...rest } = props
+  const { name, onChange, checked, children, disabled, pending, sx, ...rest } = props
 
   return (
     <Box sx={{ display: 'flex', flexWrap: 'nowrap', alignItems: 'center' }}>
@@ -24,8 +23,8 @@ const Checkbox = (props) => {
           borderRadius: '50%',
           width: '21px',
           height: '21px',
-          backgroundColor: checked ? 'success.main' : 'darkTheme.400',
-          borderColor: checked ? 'success.dark' : 'darkTheme.500',
+          backgroundColor: checked ? 'success.main' : pending ? 'transparent' : 'darkTheme.400',
+          borderColor: checked ? 'success.dark' : pending ? 'transparent' : 'darkTheme.500',
           borderWidth: 1,
           borderStyle: 'solid',
           opacity: disabled ? '0.5' : '1',
@@ -37,13 +36,18 @@ const Checkbox = (props) => {
             <Image width="12px" height="12px" alt="v" src={checkIcon} />
           </Box>
         )}
+        {pending && (
+          <Box sx={{ position: 'relative', top: '0px', left: '0px' }}>
+            <Image width="24px" height="24px" alt="v" src={clockIcon} />
+          </Box>
+        )}
         <Input
           type="checkbox"
           name={name}
           checked={checked}
           disabled={disabled}
           id={'checkbox' + name}
-          onChange={!disabled ? onChange : undefined}
+          onChange={!disabled && !pending ? onChange : undefined}
         />
       </Box>
       <Box ml={2}>{children}</Box>

@@ -6,9 +6,10 @@ import biobitSymbol from '../../../public/images/icons/BBIT.svg'
 import ContributesTable from './ContributesTable'
 import { Button } from '../../Elements/Button'
 import { useStore } from '../../store'
-import { useCallback, useContext, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { getConnectorHooks } from '../../lib/web3/getConnectorHooks'
-import { pendingFilesContext } from '../../store/pendingFilesProvider'
+import { copyToClipboard, hashClipper } from '../../utils'
+import { toast, Zoom } from 'react-toastify'
 
 const InfoBox = ({ title, icon, value, ...props }) => {
   return (
@@ -28,15 +29,11 @@ const InfoBox = ({ title, icon, value, ...props }) => {
 
 const RequestCard = ({ request, download }) => {
   const [isSendingTokens, setIsSendingTokens] = useState(false)
-  const { activeConnector, zarelaContract } = useStore()
+  const { activeConnector, zarelaContract, addPendingFiles, removePendingFiles } = useStore()
   const { useAccount } = getConnectorHooks(activeConnector)
   const account = useAccount()
-  const [cleanSelected, setCleanSelected] = useState(null)
   const [shouldRefresh, setShouldRefresh] = useState(false)
-  const PendingFiles = useContext(pendingFilesContext)
   const [selected, setSelected] = useState([])
-
-  const { setPendingFile, removePendingFile } = PendingFiles
 
   const handleConfirm = useCallback(
     (requestID, originalIndexes) => {
@@ -48,21 +45,33 @@ const RequestCard = ({ request, download }) => {
             from: account,
             // gasLimit: new BigNumber(500000).plus(originalIndexes.length * 15000).toNumber(),
           })
-          .then(({ hash: txHash }) => {
-            setPendingFile({
+          .then(({ hash: txHash }: { hash: string }) => {
+            addPendingFiles({
               txHash,
               requestID,
-              originalIndexes,
+              contributionIndexes: originalIndexes,
             })
-            setCleanSelected(requestID)
-            // toast(`TX Hash: ${txHash}`, 'success', true, txHash, {
-            //   toastId: txHash,
-            // })
-            console.log(`TX Hash: ${txHash}`)
+            setSelected([])
+            toast.success(`Transaction Submitted: ${txHash}`, {
+              position: 'bottom-center',
+              theme: 'dark',
+              toastId: txHash,
+              autoClose: 2000,
+              transition: Zoom,
+              onClick: () => {
+                copyToClipboard(txHash)
+              },
+            })
+            console.log(`TX Hash: ${hashClipper(txHash)}`)
           })
           .catch((error) => {
             console.log(error)
-            // toast(error.message, 'error')
+            toast.error(`Transaction Failed: ${error.message}`, {
+              position: 'bottom-center',
+              theme: 'dark',
+              autoClose: 4000,
+              transition: Zoom,
+            })
           })
           .finally(() => {
             setIsSendingTokens(false)
@@ -73,12 +82,20 @@ const RequestCard = ({ request, download }) => {
   )
 
   useEffect(() => {
-    if (zarelaContract && removePendingFile !== undefined)
-      zarelaContract.on('signalsApproved', ({ transactionHash }) => {
-        removePendingFile(transactionHash)
+    if (zarelaContract)
+      zarelaContract.once('signalsApproved', (orderId, confirmCount, { transactionHash }) => {
+        console.log('removing file,', transactionHash)
+        toast.success(`Transaction Confirmed: ${transactionHash}`, {
+          position: 'bottom-center',
+          theme: 'dark',
+          toastId: transactionHash,
+          autoClose: 2000,
+          transition: Zoom,
+        })
+        removePendingFiles(transactionHash)
         setShouldRefresh(true)
       })
-  }, [zarelaContract, removePendingFile])
+  }, [zarelaContract])
 
   return (
     <Card variant="card.other" sx={{ width: '100%', marginBottom: 4 }}>
@@ -115,7 +132,13 @@ const RequestCard = ({ request, download }) => {
           <InfoBox title={'Total Reward'} icon={biobitSymbol} value={20} mr={7} />
           <InfoBox title={'Total Reward'} icon={biobitSymbol} value={20} />
         </Flex>
-        <ContributesTable download={download} request={request} selected={selected} setSelected={setSelected} />
+        <ContributesTable
+          download={download}
+          request={request}
+          selected={selected}
+          setSelected={setSelected}
+          shouldRefresh={shouldRefresh}
+        />
         <Box
           sx={{
             display: 'flex',

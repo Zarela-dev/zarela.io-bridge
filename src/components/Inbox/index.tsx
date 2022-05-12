@@ -18,7 +18,7 @@ import loaderImage from '../../../public/images/loading.gif'
 const Inbox = () => {
   const [requests, setRequests] = useState({})
   const [isLoading, setLoading] = useState<boolean>(true)
-  const { activeConnector, zarelaContract: contract } = useStore()
+  const { activeConnector, zarelaContract: contract, initPendingFiles } = useStore()
   const { useAccount, useProvider } = getConnectorHooks(activeConnector)
   const account = useAccount()
   const provider = useProvider()
@@ -40,6 +40,10 @@ const Inbox = () => {
     return () => {
       worker.current.terminate()
     }
+  }, [])
+
+  useEffect(() => {
+    initPendingFiles()
   }, [])
 
   useEffect(() => {
