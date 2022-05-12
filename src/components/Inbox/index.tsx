@@ -27,6 +27,7 @@ const Inbox = () => {
   const worker: any = useRef()
   const [closable, setClosable] = useState<boolean>(false)
   const [loader, setLoader] = useState<boolean>(true)
+  const [collapsedRequest, setCollapsedRequest] = useState<number | null>(null)
 
   const clearSubmitDialog = () => {
     setLoader(true)
@@ -53,6 +54,7 @@ const Inbox = () => {
           .orderResult({ from: account })
           .then((result) => {
             const myRequests = result[0].map((item) => item.toNumber())
+            setCollapsedRequest(myRequests[0])
             // fo fetch handle loading state we need make sure this runs synchronously (predictable)
             const getAllRequests = new Promise(async (resolve, reject) => {
               const requestsListObject = {}
@@ -201,7 +203,15 @@ const Inbox = () => {
           </BasicCard>
         ) : Object.keys(requests).length > 0 ? (
           Object.keys(requests).map((key) => {
-            return <RequestCard download={signalDownloadHandler} request={requests[key]} key={key} />
+            return (
+              <RequestCard
+                collapsedRequest={collapsedRequest}
+                setCollapsedRequest={setCollapsedRequest}
+                download={signalDownloadHandler}
+                request={requests[key]}
+                key={key}
+              />
+            )
           })
         ) : (
           <BasicCard

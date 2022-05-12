@@ -4,6 +4,8 @@ import { Icon } from '../../Elements/Icon'
 import { Text } from '../../Elements/Typography'
 import biobitSymbol from '../../../public/images/icons/BBIT.svg'
 import userIcon from '../../../public/images/icons/user.svg'
+import chevronUp from '../../../public/images/icons/chevron-up.svg'
+import chevronDown from '../../../public/images/icons/chevron-down.svg'
 import ContributesTable from './ContributesTable'
 import { Button } from '../../Elements/Button'
 import { useStore } from '../../store'
@@ -29,7 +31,7 @@ const InfoBox = ({ title, icon, value, ...props }) => {
   )
 }
 
-const RequestCard = ({ request, download }) => {
+const RequestCard = ({ request, download, collapsedRequest, setCollapsedRequest }) => {
   const [isSendingTokens, setIsSendingTokens] = useState(false)
   const { activeConnector, zarelaContract, addPendingFiles, removePendingFiles } = useStore()
   const { useAccount } = getConnectorHooks(activeConnector)
@@ -131,7 +133,7 @@ const RequestCard = ({ request, download }) => {
             marginBottom: 4,
           }}
         ></Box>
-        <Flex width={'100%'}>
+        <Flex width={'100%'} flexWrap="nowrap">
           <InfoBox
             title={'Total Reward'}
             icon={biobitSymbol}
@@ -145,31 +147,60 @@ const RequestCard = ({ request, download }) => {
             icon={userIcon}
             value={`${request.totalContributed}/${request.totalContributors}`}
           />
+          <Box flex={1} />
+          {request.totalContributed > 0 && (
+            <Button
+              variant="outline"
+              size={'medium'}
+              sx={{ width: 40, padding: '0 !important' }}
+              onClick={() => {
+                if (collapsedRequest === request.requestID) {
+                  setCollapsedRequest(null)
+                } else {
+                  setCollapsedRequest(request.requestID)
+                }
+              }}
+            >
+              <Box mt={1}>
+                {collapsedRequest === request.requestID ? (
+                  <Icon src={chevronUp} size="medium" />
+                ) : (
+                  <Icon src={chevronDown} size="medium" />
+                )}
+              </Box>
+            </Button>
+          )}
         </Flex>
-        <ContributesTable
-          download={download}
-          request={request}
-          selected={selected}
-          setSelected={setSelected}
-          shouldRefresh={shouldRefresh}
-        />
-        <Box
-          sx={{
-            display: 'flex',
-            width: '100%',
-            justifyContent: 'flex-end',
-            marginTop: 4,
-          }}
-        >
-          <Button
-            disabled={selected.length === 0 || isSendingTokens}
-            variant="primary"
-            size="large"
-            onClick={() => handleConfirm(request.requestID, selected)}
-          >
-            Send Tokens
-          </Button>
-        </Box>
+        {collapsedRequest === request.requestID ? (
+          <>
+            <ContributesTable
+              download={download}
+              request={request}
+              selected={selected}
+              setSelected={setSelected}
+              shouldRefresh={shouldRefresh}
+              sendTokens={
+                <Box
+                  sx={{
+                    display: 'flex',
+                    width: '100%',
+                    justifyContent: 'flex-end',
+                    marginTop: 4,
+                  }}
+                >
+                  <Button
+                    disabled={selected.length === 0 || isSendingTokens}
+                    variant="primary"
+                    size="large"
+                    onClick={() => handleConfirm(request.requestID, selected)}
+                  >
+                    Send Tokens
+                  </Button>
+                </Box>
+              }
+            />
+          </>
+        ) : null}
       </Flex>
     </Card>
   )

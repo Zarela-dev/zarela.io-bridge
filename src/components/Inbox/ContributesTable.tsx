@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Box } from 'rebass/styled-components'
 import { Button } from '../../Elements/Button'
@@ -6,6 +7,7 @@ import { Text } from '../../Elements/Typography'
 import { getConnectorHooks } from '../../lib/web3/getConnectorHooks'
 import { useStore } from '../../store'
 import { addressClipper, hashClipper, timeSince } from '../../utils'
+import loaderImage from '../../../public/images/loading.gif'
 
 const RowDivider = () => {
   return (
@@ -20,8 +22,9 @@ const RowDivider = () => {
     ></Box>
   )
 }
-const ContributesTable = ({ request, download, selected, setSelected, shouldRefresh }) => {
+const ContributesTable = ({ request, download, selected, setSelected, shouldRefresh, sendTokens }) => {
   const { requestID } = request
+  const [isLoading, setIsLoading] = useState(true)
   const [unapprovedCount, setUnapprovedCount] = useState(0)
   const [formattedData, setFormattedData] = useState({})
   const [isSubmitting, setSubmitting] = useState(false)
@@ -120,144 +123,177 @@ const ContributesTable = ({ request, download, selected, setSelected, shouldRefr
             .catch((error) => {
               console.error(error.message)
             })
+            .finally(() => {
+              setIsLoading(false)
+              console.log('done loading')
+            })
         })
         .catch((error) => {})
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contract, shouldRefresh])
 
-  if (Object.keys(formattedData).length > 0)
+  if (isLoading) {
     return (
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          width: '100%',
-          borderRadius: 3,
-          borderColor: 'other.border',
-          borderStyle: 'solid',
-          borderWidth: 1,
-          marginTop: 6,
-        }}
-      >
-        <Box as="header">
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', width: '100%', padding: 4 }}>
-            <Box flex="0 0 30%">
-              <Text fontSize={'labelMedium'} color="content.700">
-                Address
-              </Text>
-            </Box>
-            <Box>
-              <Text fontSize={'labelMedium'} color="content.700">
-                Uploaded files
-              </Text>
-            </Box>
-          </Box>
-        </Box>
-        <RowDivider />
-        {Object.keys(formattedData).map((key, formattedIndex) => {
-          return (
-            <Box key={key + formattedIndex} as="section">
-              <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'row', flexWrap: 'nowrap', padding: 4 }}>
-                <Box flex="0 0 30%">
-                  <Text fontSize="labelMedium" color="content.900" title={key}>
-                    {addressClipper(key)}
-                  </Text>
-                </Box>
-                <Box flex={1}>
-                  {formattedData[key].map((item, index) => {
-                    return (
-                      <Box
-                        key={item.originalIndex + item.ipfsHash}
-                        sx={{
-                          display: 'flex',
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                          width: '100%',
-                          justifyContent: 'space-between',
-                          '&:not(:last-of-type)': {
-                            marginBottom: 5,
-                          },
-                        }}
-                      >
-                        {getFileStatus(item.originalIndex, item.status) === 'approved' ? (
-                          <Checkbox
-                            name={item.originalIndex + item.ipfsHash}
-                            disabled
-                            checked
-                            onChange={(e) => {
-                              if (e.target.checked === true) {
-                                onChange('check', item.originalIndex)
-                              } else {
-                                onChange('uncheck', item.originalIndex)
-                              }
-                            }}
-                          >
-                            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                              <Text fontSize="labelMedium" color="content.900" title={item.ipfsHash}>
-                                {`File ${item.originalIndex} (${hashClipper(item.ipfsHash)})`}
-                              </Text>
-                              <Text fontSize="labelSmall" color="content.700" sx={{ marginTop: 1 }}>
-                                {timeSince(item.timestamp)}
-                              </Text>
-                            </Box>
-                          </Checkbox>
-                        ) : getFileStatus(item.originalIndex, item.status) === 'pending' ? (
-                          <Checkbox name={item.originalIndex + item.ipfsHash} pending>
-                            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                              <Text fontSize="labelMedium" color="content.900" title={item.ipfsHash}>
-                                {`File ${item.originalIndex} (${hashClipper(item.ipfsHash)})`}
-                              </Text>
-                              <Text fontSize="labelSmall" color="content.700" sx={{ marginTop: 1 }}>
-                                {timeSince(item.timestamp)}
-                              </Text>
-                            </Box>
-                          </Checkbox>
-                        ) : (
-                          <Checkbox
-                            name={item.originalIndex + item.ipfsHash}
-                            checked={selected.includes(item.originalIndex)}
-                            onChange={(e) => {
-                              if (e.target.checked === true) {
-                                onChange('check', item.originalIndex)
-                              } else {
-                                onChange('uncheck', item.originalIndex)
-                              }
-                            }}
-                          >
-                            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                              <Text fontSize="labelMedium" color="content.900" title={item.ipfsHash}>
-                                {`File ${item.originalIndex} (${hashClipper(item.ipfsHash)})`}
-                              </Text>
-                              <Text fontSize="labelSmall" color="content.700" sx={{ marginTop: 1 }}>
-                                {timeSince(item.timestamp)}
-                              </Text>
-                            </Box>
-                          </Checkbox>
-                        )}
-                        <Box>
-                          <Button
-                            variant="outline"
-                            size="medium"
-                            onClick={() => {
-                              download(item.ipfsHash, item.AesEncryptedKey)
-                            }}
-                          >
-                            Download
-                          </Button>
-                        </Box>
-                      </Box>
-                    )
-                  })}
-                </Box>
-              </Box>
-              {formattedIndex !== Object.keys(formattedData).length - 1 ? <RowDivider /> : null}
-            </Box>
-          )
-        })}
+      <Box sx={{ width: '100%', height: 100, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <Image src={loaderImage} alt="loading" width={52} height={52} />
       </Box>
     )
-  return null
+  } else {
+    if (Object.keys(formattedData).length > 0) {
+      return (
+        <>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              width: '100%',
+              borderRadius: 3,
+              borderColor: 'other.border',
+              borderStyle: 'solid',
+              borderWidth: 1,
+              marginTop: 6,
+            }}
+          >
+            <Box as="header">
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', width: '100%', padding: 4 }}>
+                <Box flex="0 0 30%">
+                  <Text fontSize={'labelMedium'} color="content.700">
+                    Address
+                  </Text>
+                </Box>
+                <Box>
+                  <Text fontSize={'labelMedium'} color="content.700">
+                    Uploaded files
+                  </Text>
+                </Box>
+              </Box>
+            </Box>
+            <RowDivider />
+            {Object.keys(formattedData).map((key, formattedIndex) => {
+              return (
+                <Box key={key + formattedIndex} as="section">
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      flexDirection: 'row',
+                      flexWrap: 'nowrap',
+                      padding: 4,
+                      paddingRight: 0,
+                    }}
+                  >
+                    <Box flex="0 0 30%">
+                      <Text fontSize="labelMedium" color="content.900" title={key}>
+                        {addressClipper(key)}
+                      </Text>
+                    </Box>
+                    <Box
+                      flex={1}
+                      sx={{
+                        maxHeight: 400,
+                        overflow: 'auto',
+                        paddingRight: 4,
+                      }}
+                    >
+                      {formattedData[key].map((item, index) => {
+                        return (
+                          <Box
+                            key={item.originalIndex + item.ipfsHash}
+                            sx={{
+                              display: 'flex',
+                              flexDirection: 'row',
+                              alignItems: 'center',
+                              width: '100%',
+                              justifyContent: 'space-between',
+                              '&:not(:last-of-type)': {
+                                marginBottom: 5,
+                              },
+                            }}
+                          >
+                            {getFileStatus(item.originalIndex, item.status) === 'approved' ? (
+                              <Checkbox
+                                name={item.originalIndex + item.ipfsHash}
+                                disabled
+                                checked
+                                onChange={(e) => {
+                                  if (e.target.checked === true) {
+                                    onChange('check', item.originalIndex)
+                                  } else {
+                                    onChange('uncheck', item.originalIndex)
+                                  }
+                                }}
+                              >
+                                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                                  <Text fontSize="labelMedium" color="content.900" title={item.ipfsHash}>
+                                    {`File ${item.originalIndex} (${hashClipper(item.ipfsHash)})`}
+                                  </Text>
+                                  <Text fontSize="labelSmall" color="content.700" sx={{ marginTop: 1 }}>
+                                    {timeSince(item.timestamp)}
+                                  </Text>
+                                </Box>
+                              </Checkbox>
+                            ) : getFileStatus(item.originalIndex, item.status) === 'pending' ? (
+                              <Checkbox name={item.originalIndex + item.ipfsHash} pending>
+                                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                                  <Text fontSize="labelMedium" color="content.900" title={item.ipfsHash}>
+                                    {`File ${item.originalIndex} (${hashClipper(item.ipfsHash)})`}
+                                  </Text>
+                                  <Text fontSize="labelSmall" color="content.700" sx={{ marginTop: 1 }}>
+                                    {timeSince(item.timestamp)}
+                                  </Text>
+                                </Box>
+                              </Checkbox>
+                            ) : (
+                              <Checkbox
+                                name={item.originalIndex + item.ipfsHash}
+                                checked={selected.includes(item.originalIndex)}
+                                onChange={(e) => {
+                                  if (e.target.checked === true) {
+                                    onChange('check', item.originalIndex)
+                                  } else {
+                                    onChange('uncheck', item.originalIndex)
+                                  }
+                                }}
+                              >
+                                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                                  <Text fontSize="labelMedium" color="content.900" title={item.ipfsHash}>
+                                    {`File ${item.originalIndex} (${hashClipper(item.ipfsHash)})`}
+                                  </Text>
+                                  <Text fontSize="labelSmall" color="content.700" sx={{ marginTop: 1 }}>
+                                    {timeSince(item.timestamp)}
+                                  </Text>
+                                </Box>
+                              </Checkbox>
+                            )}
+                            <Box>
+                              <Button
+                                variant="outline"
+                                size="medium"
+                                onClick={() => {
+                                  download(item.ipfsHash, item.AesEncryptedKey)
+                                }}
+                              >
+                                Download
+                              </Button>
+                            </Box>
+                          </Box>
+                        )
+                      })}
+                    </Box>
+                  </Box>
+                  {formattedIndex !== Object.keys(formattedData).length - 1 ? <RowDivider /> : null}
+                </Box>
+              )
+            })}
+          </Box>
+          {sendTokens}
+        </>
+      )
+    } else {
+      return null
+    }
+  }
 }
 
 export default ContributesTable
