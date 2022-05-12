@@ -4,10 +4,14 @@ import Inbox from '../src/components/Inbox'
 import Web3Modal from '../src/components/Web3Modal'
 import { ApolloProvider } from '@apollo/client'
 import { client } from '../src/aplloClient'
+import Head from 'next/head'
 
 const InboxPage = () => {
   return (
     <Box>
+			<Head>
+				<title>Inbox</title>
+			</Head>
       <Web3Modal eagerConnect />
       <Inbox />
     </Box>

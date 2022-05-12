@@ -1,3 +1,4 @@
+import Head from 'next/head'
 import { Box } from 'rebass/styled-components'
 import AppContainer from '../src/components/containers/AppContainer'
 import EncryptionPublicKey from '../src/components/EncryptionPublicKey'
@@ -6,6 +7,9 @@ import Web3Modal from '../src/components/Web3Modal'
 const GetEncryptionKey = () => {
   return (
     <Box>
+      <Head>
+        <title>Get Encryption Key</title>
+      </Head>
       <Web3Modal />
       <EncryptionPublicKey />
     </Box>
