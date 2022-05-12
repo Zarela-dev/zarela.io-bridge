@@ -2,13 +2,15 @@ import React from 'react'
 import { Button } from '../../Elements/Button'
 import { getConnectorHooks } from '../../lib/web3/getConnectorHooks'
 import { useStore } from '../../store'
+import { copyToClipboard } from '../../utils'
 import BodyWrapper from '../BodyWrapper'
 import BasicCard from './Card'
 
 const EncryptionPublicKey = () => {
-  const [step, setStep] = React.useState<'request' | 'networkError' | 'retry' | 'success'>('request')
+  const [step, setStep] = React.useState<'request' | 'networkError' | 'retry' | 'success' | 'copy'>('request')
   const { activeConnector, setDialogOpen } = useStore()
   const { useProvider, useAccount } = getConnectorHooks(activeConnector)
+  const [encryptionKey, setEncryptionKey] = React.useState<string>('')
   const provider = useProvider()
   const account = useAccount()
 
@@ -23,10 +25,8 @@ const EncryptionPublicKey = () => {
             method: 'eth_getEncryptionPublicKey',
             params: [account], // you must have access to the specified account
           })
-          if (window.navigator) {
-            navigator.clipboard.writeText(res)
-            setStep('success')
-          }
+          setEncryptionKey(res)
+          setStep('success')
         } catch (error) {
           setStep('retry')
           console.error(error)
@@ -96,13 +96,16 @@ const EncryptionPublicKey = () => {
       return (
         <BasicCard
           title="All done!"
-          subtitle="Please click below to continue into our Bioverse"
+          subtitle="Please click below to continue into the Bioverse"
           actions={
             <Button
               variant="primary"
               size="medium"
               sx={{ width: '100%' }}
-              onClick={() => window.alert('go back to Bioverse')}
+              onClick={async () => {
+                await copyToClipboard(encryptionKey)
+                window.alert('go back to Bioverse')
+              }}
             >
               Back to Bioverse
             </Button>
