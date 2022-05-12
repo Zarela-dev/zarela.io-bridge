@@ -1,23 +1,31 @@
 import { ReactElement } from 'react'
-import { Box } from 'rebass/styled-components'
-import { string } from 'yup'
-import { Button } from '../../Elements/Button'
+import { Box, SxStyleProp } from 'rebass/styled-components'
 import { Card } from '../../Elements/Card'
 import { Text } from '../../Elements/Typography'
+import loaderImage from '../../../public/images/loading.gif'
+import Image, { StaticImageData } from 'next/image'
 
 const BasicCard = ({
   title,
   subtitle,
   actions,
   children,
+  contained = true,
+  sx,
+  loader = false,
+  icon,
 }: {
   title?: string
   children?: ReactElement
   subtitle?: string
   actions?: ReactElement
+  contained?: boolean
+  sx?: SxStyleProp
+  loader?: boolean
+  icon?: StaticImageData
 }) => {
   return (
-    <Card variant="card.secondary" contained>
+    <Card variant="card.secondary" contained={contained} sx={sx}>
       <Box
         sx={{
           display: 'flex',
@@ -28,6 +36,16 @@ const BasicCard = ({
           width: '100%',
         }}
       >
+        {icon && (
+          <Box mb={4}>
+            <Image src={icon} alt="loading" width={52} height={52} />
+          </Box>
+        )}
+        {loader && (
+          <Box mb={4}>
+            <Image src={loaderImage} alt="loading" width={52} height={52} />
+          </Box>
+        )}
         <Text variant="typography.titleMedium" mb={2}>
           {title}
         </Text>

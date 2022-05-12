@@ -1,27 +1,36 @@
 import Image from 'next/image'
 import { SxStyleProp } from 'rebass'
-import { useDropzone } from 'react-dropzone'
+import { FileRejection, useDropzone } from 'react-dropzone'
 import { Box } from 'rebass/styled-components'
 import { Text } from './Typography'
 import trashIcon from '../../public/images/icons/trash-file.svg'
 import { FormikErrors } from 'formik'
+import { hashClipper } from '../utils'
 
 const Dropzone = ({
   files,
   setFiles,
   error,
   sx,
+  setError,
 }: {
   files: File[]
-  error?: string | FormikErrors<File>
+  error: Error | null
+  setError: (error: Error | null) => void
   setFiles: (files: File[]) => void
   sx?: SxStyleProp
 }) => {
   const { getRootProps, getInputProps, isDragAccept, isDragReject } = useDropzone({
     maxFiles: 1,
-    accept: '.zip',
+    multiple: false,
+    maxSize: 750 * 1024 * 1024,
+    onDropRejected: (rejections: FileRejection[]) => {
+      console.error('err', error)
+      rejections.length > 0 && setError(new Error(rejections[0].errors[0].message))
+    },
     onDrop: (acceptedFiles: File[]) => {
       setFiles(acceptedFiles)
+      setError(null)
     },
   })
 
@@ -59,8 +68,8 @@ const Dropzone = ({
         </Text>
       </Box>
       {error && (
-        <Text variant="typography.labelSmall" color="danger.main" mt={-4} mb={4} ml={4}>
-          {error}
+        <Text variant="typography.labelSmall" color="danger.main" mt={-1} mb={4} ml={4}>
+          {error.message}
         </Text>
       )}
       {files.length ? (
@@ -97,7 +106,7 @@ const Dropzone = ({
                   whiteSpace: 'nowrap',
                 }}
               >
-                {file.name}
+                {hashClipper(file.name)}
               </Text>
               <Box
                 sx={{ flex: '0 0 16px', cursor: 'pointer' }}

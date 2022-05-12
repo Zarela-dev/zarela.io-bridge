@@ -1,6 +1,8 @@
 import BigNumber from 'bignumber.js'
 import { timeSince } from './timeSince'
 import { copyToClipboard } from './copyToClipboard'
+import { ZRNG } from './ZRNG'
+import { getFileNameWithExt } from './getFileExt'
 
 export const normalizeAddress = (address: string): string => address && address.toLowerCase()
 
@@ -23,4 +25,4 @@ export const convertToBiobit = (value, format = true) => {
   return new BigNumber(value).dividedBy(1000000000).toNumber()
 }
 
-export { timeSince, copyToClipboard }
+export { timeSince, copyToClipboard, ZRNG, getFileNameWithExt }
