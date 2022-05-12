@@ -108,7 +108,7 @@ const RequestCard = ({ request, download, collapsedRequest, setCollapsedRequest 
   return (
     <Card variant="card.other" sx={{ width: '100%', marginBottom: 4 }}>
       <Flex width={'100%'} flexDirection="row" flexWrap={'wrap'}>
-        <Flex flex="0 0 100%" flexWrap={'nowrap'}>
+        <Flex flex="0 0 100%" flexWrap={'nowrap'} alignItems="center">
           <Box
             sx={{
               backgroundColor: 'darkTheme.400',
