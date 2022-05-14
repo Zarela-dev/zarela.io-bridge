@@ -4,6 +4,7 @@ import { Text } from '../src/Elements/Typography'
 import { Button } from '../src/Elements/Button'
 import Image from 'next/image'
 import ErrorImage from './../public/images/404.svg'
+import AppContainer from '../src/components/containers/AppContainer'
 
 const Custom404 = () => {
   return (
@@ -75,7 +76,7 @@ const Custom404 = () => {
 }
 
 Custom404.getLayout = function getLayout(page: ReactElement) {
-  return page
+  return <AppContainer>{page}</AppContainer>
 }
 
 export default Custom404

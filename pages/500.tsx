@@ -4,6 +4,7 @@ import { Text } from '../src/Elements/Typography'
 import { Button } from '../src/Elements/Button'
 import Image from 'next/image'
 import ErrorImage from './../public/images/500.svg'
+import AppContainer from '../src/components/containers/AppContainer'
 
 const Custom500 = () => {
   return (
@@ -88,7 +89,7 @@ const Custom500 = () => {
 }
 
 Custom500.getLayout = function getLayout(page: ReactElement) {
-  return page
+  return <AppContainer>{page}</AppContainer>
 }
 
 export default Custom500
