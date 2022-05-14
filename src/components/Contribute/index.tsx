@@ -90,10 +90,6 @@ const ContributeForm = () => {
     }
   }, [zarelaContract, router.query])
 
-  useEffect(() => {
-    console.log('requests', request)
-  }, [request])
-
   const submitSignal = useCallback(
     (request: any, file: File) => {
       if (zarelaContract && account) {
@@ -169,7 +165,6 @@ const ContributeForm = () => {
                   { from: account }
                 )
                 .then((result) => {
-                  console.log('result', result)
                   setContributionDone(true)
                   setTxHash(result.hash)
                 })
