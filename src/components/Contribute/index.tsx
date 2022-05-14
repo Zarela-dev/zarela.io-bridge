@@ -11,13 +11,16 @@ import { encrypt } from 'eth-sig-util'
 import * as ethUtil from 'ethereumjs-util'
 import { useRouter } from 'next/router'
 import { Box } from 'rebass/styled-components'
-import Image from 'next/image'
 import exclamationMarkIcon from '../../../public/images/icons/exclamation-mark.svg'
 import copyIcon from '../../../public/images/icons/copy.svg'
 import { Card } from '../../Elements/Card'
 import { Text } from '../../Elements/Typography'
 import { Icon } from '../../Elements/Icon'
 import { Link } from '../../Elements/Link'
+import InfoBox from '../Inbox/InfoBox'
+import useBiobit from '../../hooks/useBiobit'
+import biobitSymbol from '../../../public/images/icons/BBIT.svg'
+import userIcon from '../../../public/images/icons/user.svg'
 
 const ContributeForm = () => {
   const [files, setFiles] = useState<File[]>([])
@@ -36,6 +39,8 @@ const ContributeForm = () => {
   const [hasSpinner, setHasSpinner] = useState(false)
   const [dialogMessage, setDialogMessage] = useState('')
   const [dialogSubtitle, setDialogSubtitle] = useState('')
+  const [isLoading, setLoading] = useState(true)
+  const getBBIT = useBiobit()
 
   const clearSubmitDialog = () => {
     setSubmittingFile(false)
@@ -76,6 +81,11 @@ const ContributeForm = () => {
         })
         .catch((error) => {
           console.error(error.message)
+        })
+        .finally(() => {
+          setTimeout(() => {
+            setLoading(false)
+          }, 500)
         })
     }
   }, [zarelaContract, router.query])
@@ -240,9 +250,66 @@ const ContributeForm = () => {
             subtitle={dialogSubtitle}
             icon={!hasSpinner && exclamationMarkIcon}
           ></BasicCard>
+        ) : isLoading ? (
+          <BasicCard loader title="Preparing stuff"></BasicCard>
         ) : (
           <>
-            <BasicCard sx={{ flex: 1, marginBottom: 4 }} contained={false} title="Upload the signal file"></BasicCard>
+            <BasicCard
+              sx={{ flex: 1, marginBottom: 4 }}
+              contained={false}
+              title="You are about to contribute in this request:"
+            >
+              <Card variant="card.other" sx={{ width: '100%', marginTop: 4 }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', width: '100%' }}>
+                    <Box
+                      sx={{
+                        backgroundColor: 'darkTheme.400',
+                        borderRadius: 32,
+                        padding: 2,
+                        height: 32,
+                        minWidth: 32,
+                        marginRight: 2,
+                        flex: '0 0 auto',
+                      }}
+                    >
+                      <Text>{request.requestID}</Text>
+                    </Box>
+                    <Text
+                      variant="typography.titleMedium"
+                      sx={{ textAlign: 'left', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+                    >
+                      {request.title}
+                    </Text>
+                  </Box>
+                  <Box
+                    sx={{
+                      borderBottomColor: 'other.border',
+                      borderBottomWidth: 1,
+                      borderBottomStyle: 'solid',
+                      width: '100%',
+                      marginTop: 4,
+                      marginBottom: 4,
+                    }}
+                  />
+                  <Box sx={{ display: 'flex', justifyContent: 'flex-start', flexWrap: 'nowrap', width: '100%' }}>
+                    <InfoBox
+                      title={'Total Reward'}
+                      icon={biobitSymbol}
+                      value={`${getBBIT(request.angelTokenPay, request.laboratoryTokenPay)[0]} | ~ $${
+                        getBBIT(request.angelTokenPay, request.laboratoryTokenPay)[1]
+                      }`}
+                      mr={7}
+                    />
+                    <InfoBox
+                      title={'Contributions'}
+                      icon={userIcon}
+                      value={`${request.totalContributed}/${request.totalContributors}`}
+                    />
+                  </Box>
+                </Box>
+              </Card>
+            </BasicCard>
             <BasicCard sx={{ flex: 1 }} contained={false} title="Upload the signal file">
               <>
                 <Dropzone

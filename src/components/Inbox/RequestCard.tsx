@@ -14,22 +14,7 @@ import { getConnectorHooks } from '../../lib/web3/getConnectorHooks'
 import { copyToClipboard, hashClipper } from '../../utils'
 import { toast, Zoom } from 'react-toastify'
 import useBiobit from '../../hooks/useBiobit'
-
-const InfoBox = ({ title, icon, value, ...props }) => {
-  return (
-    <Flex flexDirection={'column'} {...props}>
-      <Text fontSize="labelSmall" color="content.700" mb={2}>
-        {title}
-      </Text>
-      <Flex alignItems={'center'}>
-        <Icon size="small" src={icon} mr={1}></Icon>
-        <Text fontSize="labelMedium" color="content.900">
-          {value}
-        </Text>
-      </Flex>
-    </Flex>
-  )
-}
+import InfoBox from './InfoBox'
 
 const RequestCard = ({ request, download, collapsedRequest, setCollapsedRequest }) => {
   const [isSendingTokens, setIsSendingTokens] = useState(false)
