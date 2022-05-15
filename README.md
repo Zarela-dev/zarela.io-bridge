@@ -1,32 +1,69 @@
 ## Zarela Bridge Service
+
 Due to technical shortcomings in unity, some features such an encryption and decryption of messages are not available as of yet. The bridge service is a temporary solution to overcome these limitations.
 
 ### Services
+
 right now there are 3 services provided by the bridge service:
 
 1. encryption public key retrieval
 2. contribution inbox (decryption using Metamask API)
 3. contribution on Zarela smart contract
 
-### How to use services
-there are 3 pages available to use the services:
+### How to use services:
 
-1. [Encryption Public Key Retrieval](https://bridge.zarela.io/getEncryptionKey)
-2. [Inbox](https://bridge.zarela.io/inbox)
-3. [Contribution](https://bridge.zarela.io/contribute)
+there are 4 pages available to use the services:
 
-first 2 are rather straightforward and user can work with them as soon as they connect with their Metamask wallet.
-contribution however, requires 2 parameters passed in as query parameters:
-`
-https://bridge.zarela.io/contribute?requestId={requestId}&zarelaBusinessId={busnessId}
-`
-##### requestId:
-the `id` of the request that user wants to contribute to.
+- [Encryption Public Key Retrieval](https://bridge.zarela.io/getEncryptionKey)
+- [Inbox](https://bridge.zarela.io/inbox)
+- [Contribution](https://bridge.zarela.io/contribute)
+- [Create Request](https://bridge.zarela.io/createRequest)
 
-##### zarelaBusinessId:
-the `id` of the business that the request is available on.
-**a list of reserved business IDs are available [here]()**
+### Parameters:
 
+here are the parameters that are required to use the services:
+
+##### Contribution
+
+query exmaple:
+`https://bridge.zarela.io/contribute?requestId={requestId}&zarelaBusinessId={busnessId}`
+
+**`requestId`**: the `id` of the request that user wants to contribute to.
+these parameters are required to contribute using this service:
+
+**`zarelaBusinessId`**: the `id` of the business that the request is available on.
+
+note: a list of reserved business IDs will be available soon but for now, you can see the reserved IDs here:
+| business | ID | Description | Website |
+| --- | --- | --- | --- |
+| Zarela Webapp | 1 | A peer to peer data platform for trading biosignals on the blockchain network. | [Link](https://app.zarela.io)
+| Zarela Bioverse | 2 | Zarela Bioverse | [Link](https://zarela.io/bioverse)
+
+---
+
+##### Create Request
+
+these properties should be passed as query parameters to create a request:
+**sample encoded URL:**
+`https://brdige.zarela.io/newRequest?title=sample%20title%20with%20spaces&desc=sample%20description&angelWage=555.154&hubWage=88996.123456789&rewardable=angel&requiredContributions=444000&categories=EEG,ECG,some%20other%20category&zpaper=QmapYt3QDxyK3kKJ5L7bFrmpXAFeKsUkzvQpAZUHekDAuT&businessId=342`
+
+**decoded sample:**
+`https://brdige.zarela.io/newRequest?title=sample title with spaces&desc=sample description&angelWage=555.154&hubWage=88996.123456789&rewardable=angel&requiredContributions=444000&categories=EEG,ECG,some other category&zpaper=QmapYt3QDxyK3kKJ5L7bFrmpXAFeKsUkzvQpAZUHekDAuT&businessId=342`
+
+| Parameter                 | required | Default value | Description                                                                     |
+| ------------------------- | -------- | ------------- | ------------------------------------------------------------------------------- |
+| **title**                 | Yes      | -             | title of the request                                                            |
+| **desc**                  | Yes      | -             | short description of the request                                                |
+| **angelWage**             | Yes      | 0             | the amount of wage that angel will receive per contribution in BBIT\*           |
+| **hubWage**               | Yes      | 0             | the amount of wage that hub will receive per contribution in BBIT\*             |
+| **rewardable**            | Yes      | `angel`       | the party who receives the reward, `angel` or `hub`.                            |
+| **requiredContributions** | Yes      | 0             | quantity of contributions required                                              |
+| **categories**            | Yes      | -             | a comma separated list of categories related to this request e.g. `foo,bar,baz` |
+| **zpaper**                | Yes      | none          | `CID` of the uploaded Zpaper on IPFS                                            |
+| **businessId**            | Yes      | none          | Business ID on which this request is supposed to be placed                      |
+
+\*BBIT: up to 9 decimals and less than 2000000
 
 ### Supported Wallets
+
 Since `eth_decrypt` and `eth_getEncryptionPublicKey` are only available in Metamask, currently we only fully support Metamask wallet.
