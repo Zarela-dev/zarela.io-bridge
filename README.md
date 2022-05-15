@@ -59,8 +59,8 @@ these properties should be passed as query parameters to create a request:
 | **rewardable**            | Yes      | `angel`       | the party who receives the reward, `angel` or `hub`.                            |
 | **requiredContributions** | Yes      | 0             | quantity of contributions required                                              |
 | **categories**            | Yes      | -             | a comma separated list of categories related to this request e.g. `foo,bar,baz` |
-| **zpaper**                | Yes      | none          | `CID` of the uploaded Zpaper on IPFS                                            |
-| **businessId**            | Yes      | none          | Business ID on which this request is supposed to be placed                      |
+| **zpaper**                | Yes      | -          | `CID` of the uploaded Zpaper on IPFS                                            |
+| **businessId**            | Yes      | -          | Business ID on which this request is supposed to be placed                      |
 
 \*BBIT: up to 9 decimals and less than 2000000
 
