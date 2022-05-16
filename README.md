@@ -31,15 +31,6 @@ query exmaple:
 **`requestId`**: the `id` of the request that user wants to contribute to.
 these parameters are required to contribute using this service:
 
-**`zarelaBusinessId`**: the `id` of the business that the request is available on.
-
-note: a list of reserved business IDs will be available soon but for now, you can see the reserved IDs here:
-| business | ID | Description | Website |
-| --- | --- | --- | --- |
-| Zarela Webapp | 1 | A peer to peer data platform for trading biosignals on the blockchain network. | [Link](https://app.zarela.io)
-| Zarela Bioverse | 2 | Zarela Bioverse | [Link](https://zarela.io/bioverse)
-
----
 
 ##### Create Request
 
@@ -64,6 +55,13 @@ these properties should be passed as query parameters to create a request:
 
 \*BBIT: up to 9 decimals and less than 2000000
 
+note: a list of reserved business IDs will be available soon but for now, you can see the reserved IDs here:
+| business | ID | Description | Website |
+| --- | --- | --- | --- |
+| Zarela Webapp | 1 | A peer to peer data platform for trading biosignals on the blockchain network. | [Link](https://app.zarela.io)
+| Zarela Bioverse | 2 | Zarela Bioverse | [Link](https://zarela.io/bioverse)
+
+---
 ### Supported Wallets
 
 Since `eth_decrypt` and `eth_getEncryptionPublicKey` are only available in Metamask, currently we only fully support Metamask wallet.
