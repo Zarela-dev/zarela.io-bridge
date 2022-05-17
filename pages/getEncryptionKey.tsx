@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import { ReactElement } from 'react'
 import { Box } from 'rebass/styled-components'
 import AppContainer from '../src/components/containers/AppContainer'
 import EncryptionPublicKey from '../src/components/EncryptionPublicKey'

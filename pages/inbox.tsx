@@ -4,6 +4,7 @@ import Inbox from '../src/components/Inbox'
 import Web3Modal from '../src/components/Web3Modal'
 import Head from 'next/head'
 import GqlLayout from '../src/Layouts/GqlLayout'
+import { ReactElement } from 'react'
 
 const InboxPage = () => {
   return (
