@@ -4,20 +4,25 @@ Due to technical shortcomings in unity, some features such an encryption and dec
 
 ### Services
 
-right now there are 3 services provided by the bridge service:
+right now there are 4 services provided by the bridge service:
 
 1. encryption public key retrieval
 2. contribution inbox (decryption using Metamask API)
 3. contribution on Zarela smart contract
+4. create new request
 
 ### How to use services:
 
-there are 4 pages available to use the services:
+these are the pages available for each service:
 
 - [Encryption Public Key Retrieval](https://bridge.zarela.io/getEncryptionKey)
+`https://bridge.zarela.io/getEncryptionKey`
 - [Inbox](https://bridge.zarela.io/inbox)
+`https://bridge.zarela.io/inbox`
 - [Contribution](https://bridge.zarela.io/contribute)
-- [Create Request](https://bridge.zarela.io/createRequest)
+`https://bridge.zarela.io/contribute`
+- [Create Request](https://bridge.zarela.io/createRequest) **(WIP)**
+`https://bridge.zarela.io/createRequest`
 
 ### Parameters:
 
