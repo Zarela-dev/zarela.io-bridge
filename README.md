@@ -28,16 +28,16 @@ these are the pages available for each service:
 
 here are the parameters that are required to use the services:
 
-##### Contribution
+#### Contribution
 
 query exmaple:
-`https://bridge.zarela.io/contribute?requestId={requestId}&zarelaBusinessId={busnessId}`
+`https://bridge.zarela.io/contribute?requestId={requestId}`
 
 **`requestId`**: the `id` of the request that user wants to contribute to.
 these parameters are required to contribute using this service:
 
 
-##### Create Request
+#### Create Request
 
 these properties should be passed as query parameters to create a request:
 **sample encoded URL:**
