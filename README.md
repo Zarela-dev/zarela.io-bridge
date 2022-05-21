@@ -30,7 +30,7 @@ here are the parameters that are required to use the services:
 
 #### Contribution
 
-query exmaple:
+query example:
 `https://bridge.zarela.io/contribute?requestId={requestId}`
 
 **`requestId`**: the `id` of the request that user wants to contribute to.
