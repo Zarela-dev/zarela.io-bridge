@@ -28,6 +28,8 @@ these are the pages available for each service:
 
 here are the parameters that are required to use the services:
 
+#### Encryption Public Key Retrieval
+return value: `{"encryptionPublicKey":"[encryptionPublicKey]"}`
 #### Contribution
 
 query example:
