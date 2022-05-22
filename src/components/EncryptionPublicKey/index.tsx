@@ -103,7 +103,7 @@ const EncryptionPublicKey = () => {
               size="medium"
               sx={{ width: '100%' }}
               onClick={async () => {
-                await copyToClipboard(encryptionKey)
+                await copyToClipboard(JSON.stringify({ encryptionPublicKey: encryptionKey }))
               }}
             >
               Click here to copy encryption key
