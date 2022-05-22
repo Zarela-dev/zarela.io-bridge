@@ -223,15 +223,7 @@ const Inbox = () => {
             )
           })
         ) : (
-          <BasicCard
-            title="No results found"
-            subtitle="You don't seem to have any requests."
-            actions={
-              <Button variant="primary" size="medium" sx={{ width: '100%' }} onClick={() => alert('back to bioverse')}>
-                Back to Bioverse
-              </Button>
-            }
-          />
+          <BasicCard title="No results found" subtitle="You don't seem to have any requests." />
         )}
       </Box>
     </BodyWrapper>

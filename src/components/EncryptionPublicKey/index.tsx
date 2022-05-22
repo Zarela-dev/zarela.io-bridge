@@ -45,7 +45,7 @@ const EncryptionPublicKey = () => {
           subtitle="We need your encryption key before we can create a new request."
           actions={
             <Button variant="primary" size="medium" sx={{ width: '100%' }} onClick={getEncryptionKey}>
-              {!account ? 'Connect Wallet' : 'Get Encryption Key'}
+              {!account ? 'Connect Wallet' : 'Request encryption public key'}
             </Button>
           }
         />
@@ -104,10 +104,9 @@ const EncryptionPublicKey = () => {
               sx={{ width: '100%' }}
               onClick={async () => {
                 await copyToClipboard(encryptionKey)
-                window.alert('go back to Bioverse')
               }}
             >
-              Back to Bioverse
+              Click here to copy encryption key
             </Button>
           }
         />

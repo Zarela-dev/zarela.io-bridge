@@ -231,9 +231,6 @@ const ContributeForm = () => {
                     See tx on explorer
                   </Button>
                 </Link>
-                <Button variant="primary" size="large">
-                  Back to Bioverse
-                </Button>
               </Box>
             </Box>
           </BasicCard>
