@@ -211,17 +211,19 @@ const Inbox = () => {
             </Box>
           </BasicCard>
         ) : Object.keys(requests).length > 0 ? (
-          Object.keys(requests).map((key) => {
-            return (
-              <RequestCard
-                collapsedRequest={collapsedRequest}
-                setCollapsedRequest={setCollapsedRequest}
-                download={signalDownloadHandler}
-                request={requests[key]}
-                key={key}
-              />
-            )
-          })
+          Object.keys(requests)
+            .sort((a, b) => +b - +a)
+            .map((key) => {
+              return (
+                <RequestCard
+                  collapsedRequest={collapsedRequest}
+                  setCollapsedRequest={setCollapsedRequest}
+                  download={signalDownloadHandler}
+                  request={requests[key]}
+                  key={key}
+                />
+              )
+            })
         ) : (
           <BasicCard title="No results found" subtitle="You don't seem to have any requests." />
         )}
