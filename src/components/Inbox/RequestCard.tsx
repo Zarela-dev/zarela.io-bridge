@@ -21,7 +21,7 @@ const RequestCard = ({ request, download, collapsedRequest, setCollapsedRequest 
   const { activeConnector, zarelaContract, addPendingFiles, removePendingFiles } = useStore()
   const { useAccount } = getConnectorHooks(activeConnector)
   const account = useAccount()
-  const [shouldRefresh, setShouldRefresh] = useState(false)
+  const [shouldRefresh, setShouldRefresh] = useState<boolean | number>(false)
   const [selected, setSelected] = useState([])
   const getBBIT = useBiobit()
 
@@ -80,7 +80,7 @@ const RequestCard = ({ request, download, collapsedRequest, setCollapsedRequest 
             transition: Zoom,
           })
           removePendingFiles(transactionHash)
-          setShouldRefresh(true)
+          setShouldRefresh(new Date().getTime())
         })
     }
     return () => {
