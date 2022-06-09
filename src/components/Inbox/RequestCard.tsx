@@ -136,7 +136,7 @@ const RequestCard = ({ request, download, collapsedRequest, setCollapsedRequest 
             value={`${request.totalContributed}/${request.totalContributors}`}
           />
           <Box flex={1} />
-          {request.totalContributed > 0 && (
+          {request.totalContributedCount > 0 && (
             <Button
               variant="outline"
               size={'medium'}
